@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model ShoppingList {
+  id      Int    @id @default(autoincrement())
+  title   String
+  items   Item[]
+
+  @@map("shopping_lists")
+}
+
+model Item {
+  id            Int           @id @default(autoincrement())
+  name          String
+  quantity      Int
+  completed     Boolean       @default(false)
+  shoppingListId Int
+  shoppingList  ShoppingList @relation(fields: [shoppingListId], references: [id])
+
+  @@index([shoppingListId], name: "shoppingListId")
+  @@map("items")
+}
